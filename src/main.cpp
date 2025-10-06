@@ -1,11 +1,6 @@
 #include <Arduino.h>
-#include <WiFi.h>
-#include <ESP32Servo.h>
-#include "servo_arm.h"
 #include "robot.h"
 #include "config.h"
-#include "magnet.h"
-
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -19,7 +14,7 @@ void mqttCallback(char* topic, byte* message, unsigned int length) {
 
   if (String(topic) == "robot/cmd") {
     if (msg.length() > 0) {
-      handleCommandServo(msg[0]);
+      handleCommandMotor(msg[0]);
     }
   }
 }
@@ -64,7 +59,6 @@ void setup(){
   client.setCallback(mqttCallback);
   //Initializating robot
     initRobot();
-    initServo();
     Serial.println("Robot is ready");
 }
 
