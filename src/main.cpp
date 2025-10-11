@@ -25,7 +25,7 @@ void reconnect() {
     Serial.print("Connecting to MQTT Server ...");
     if (client.connect("ESP32Client")) {
       Serial.println("Connected!");
-      client.subscribe("robot/cmd");
+      client.subscribe("servo/cmd");
     } else {
       Serial.print("Error: ");
       Serial.print(client.state());
@@ -57,7 +57,7 @@ void setup(){
   client.setCallback(mqttCallback);
   //Initializating robot
   initServo();
-  Serial.println("Robot is ready");
+  Serial.println("Servo is ready");
 }
 
 void loop(){
