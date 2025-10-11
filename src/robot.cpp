@@ -1,28 +1,32 @@
 #include <Arduino.h>
 #include "robot.h"
 
-// định nghĩa hằng (definition) chỉ 1 lần trong project 
+void setMotor(int in1, int in2, int channel, int speed) {
+  if (speed > 0) {
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    ledcWrite(channel, speed);
+  } else if (speed < 0) {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+    ledcWrite(channel, -speed);
+  } else {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+    ledcWrite(channel, 0);
+  }
+}
 
 void motorSpin(int v1, int v2, int v3, int v4) {
-  // Động cơ 1 - Bánh trước trái
-  digitalWrite(IN1_1, v1 >= 0 ? LOW : HIGH);
-  digitalWrite(IN2_1, v1 >= 0 ? HIGH  : LOW);
-  ledcWrite(0, abs(v1));
+  v1 = constrain(v1, -255, 255);
+  v2 = constrain(v2, -255, 255);
+  v3 = constrain(v3, -255, 255);
+  v4 = constrain(v4, -255, 255);
 
-  // Động cơ 2 - Bánh trước phải
-  digitalWrite(IN3_1, v2 >= 0 ? HIGH : LOW);
-  digitalWrite(IN4_1, v2 >= 0 ? LOW  : HIGH);
-  ledcWrite(1, abs(v2));
-  
-  // Động cơ 3 - Bánh sau trái
-  digitalWrite(IN1_2, v3 >= 0 ? HIGH : LOW);
-  digitalWrite(IN2_2, v3 >= 0 ? LOW  : HIGH);
-  ledcWrite(2, abs(v3));
-
-  // Động cơ 4 - Bánh sau phải
-  digitalWrite(IN3_2, v4 >= 0 ? LOW : HIGH);
-  digitalWrite(IN4_2, v4 >= 0 ? HIGH  : LOW);
-  ledcWrite(3, abs(v4));
+  setMotor(IN1_1, IN2_1, PWM_CHANNEL_0, v1); // Motor 1 - Trước trái
+  setMotor(IN3_1, IN4_1, PWM_CHANNEL_1, v2); // Motor 2 - Trước phải
+  setMotor(IN1_2, IN2_2, PWM_CHANNEL_2, v3); // Motor 3 - Sau trái
+  setMotor(IN3_2, IN4_2, PWM_CHANNEL_3, v4); // Motor 4 - Sau phải
 }
 
 void initRobot() {
@@ -38,78 +42,45 @@ void initRobot() {
   pinMode(IN4_2, OUTPUT);
 
   // Cấu hình PWM cho 4 kênh
-  ledcSetup(0, freq, resolution);
-  ledcSetup(1, freq, resolution);
-  ledcSetup(2, freq, resolution);
-  ledcSetup(3, freq, resolution);
+  ledcSetup(PWM_CHANNEL_0, freq, resolution);
+  ledcSetup(PWM_CHANNEL_1, freq, resolution);
+  ledcSetup(PWM_CHANNEL_2, freq, resolution);
+  ledcSetup(PWM_CHANNEL_3, freq, resolution);
 
   // Gán PWM cho các chân ENA/ENB
-  ledcAttachPin(ENA1, 0);
-  ledcAttachPin(ENB1, 1);
-  ledcAttachPin(ENA2, 2);
-  ledcAttachPin(ENB2, 3);
+  ledcAttachPin(ENA1, PWM_CHANNEL_0);
+  ledcAttachPin(ENB1, PWM_CHANNEL_1);
+  ledcAttachPin(ENA2, PWM_CHANNEL_2);
+  ledcAttachPin(ENB2, PWM_CHANNEL_3);
 
   // Stop when robot start up
   motorSpin(0, 0, 0, 0);
 }
 
-void moveForward(int speed) {
-  motorSpin(speed+90, speed+90, speed, speed);
-}
-
-void moveBackward(int speed) {
-  motorSpin(-speed -90, -speed-90, -speed, -speed);
-}
-
-void turnRight(int speed) {
-  motorSpin(-speed-90, speed+90, -speed, speed);
-}
-
-void turnLeft(int speed) {
-  motorSpin(speed+90, -speed-90, speed, -speed);
-}
-
-void rotateRight(int speed) {
-  motorSpin(speed+90, speed+90, -speed, -speed);
-}
-
-void rotateLeft(int speed) {
-  motorSpin(-speed-90, -speed-90, speed, speed);
-}
+void moveForward(int speed) {  motorSpin(speed, speed, speed, speed);  }
+void moveBackward(int speed) {  motorSpin(-speed, -speed, -speed, -speed);  }
+void turnRight(int speed) {  motorSpin(speed, -speed, speed, -speed);  }
+void turnLeft(int speed) {  motorSpin(-speed, speed, -speed, speed);  }
+void rotateRight(int speed) { motorSpin(speed, -speed, speed, -speed); }
+void rotateLeft(int speed) { motorSpin(-speed, speed, -speed, speed); }
 
 void handleCommandMotor(char cmd){
     switch (cmd){
         case 'F' :
-            moveForward(MOTOR_SPEED);
-            Serial.println("Go Straight");
-            break;
+            moveForward(MOTOR_SPEED);  Serial.println(cmd);  break;
         case 'B' :
-            moveBackward(MOTOR_SPEED);
-            Serial.println("Go Back");
-            break;
+            moveBackward(MOTOR_SPEED);  Serial.println(cmd);  break;
         case 'R':
-            turnRight(MOTOR_SPEED);
-            Serial.println("Turn Right");
-            break;
+            turnRight(MOTOR_SPEED);   Serial.println(cmd);  break;
         case 'L':
-            turnLeft(MOTOR_SPEED);
-            Serial.println("Turn Left");
-            break;
+            turnLeft(MOTOR_SPEED);  Serial.println(cmd);  break;
         case 'G':
-            rotateRight(MOTOR_SPEED);
-            Serial.println("Rorate Right");
-            break;
+            rotateRight(MOTOR_SPEED);  Serial.println(cmd);  break;
         case 'H':
-            rotateLeft(MOTOR_SPEED);
-            Serial.println("Rorate Left");
-            break;
+            rotateLeft(MOTOR_SPEED);  Serial.println(cmd);  break;
         case 'S':
-            motorSpin(0, 0, 0, 0);
-            Serial.println("Stop");
-            break;
-        default : 
-          motorSpin(0, 0, 0, 0);
-            break;
+            motorSpin(0, 0, 0, 0);  Serial.println(cmd);  break;
+        default :  break;
     }
 }
 
