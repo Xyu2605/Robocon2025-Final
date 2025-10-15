@@ -10,7 +10,7 @@ Servo servo1;
 Servo servo2;
 Servo servo3;
 
-void updateArm(int target, int id) {
+void updateArm(int id, int target) {
     int *anglePtr = nullptr;
     Servo *servoPtr = nullptr;
 
@@ -37,9 +37,10 @@ void autoUpdateArm(int id, int target) {
         default: return;
     }
 
-    target = constrain(target, 0, 180);  // tránh quá góc
+    target = constrain(target, 0, 180);
+    unsigned long startTime = millis();
 
-    while (*anglePtr != target) {
+    while (*anglePtr != target && millis() - startTime < 5000) { // tránh treo
         if (*anglePtr < target) (*anglePtr)++;
         else if (*anglePtr > target) (*anglePtr)--;
 
@@ -76,17 +77,21 @@ void setDefaultArm() {
 }
 
 void servoUp(int id) {
-    if (id == 1) updateArm(angle1 + stepAngle, 1);
-    if (id == 2) updateArm(angle2 + stepAngle, 2);
-    if (id == 3) updateArm(angle3 + stepAngle, 3);
-    Serial.println(String(angle1) + " - " + String(angle2) + " - " + String(angle3));
+    switch (id) {
+        case 1: updateArm(1, angle1 + stepAngle); break;
+        case 2: updateArm(2, angle2 + stepAngle); break;
+        case 3: updateArm(3, angle3 + stepAngle); break;
+    }
+    Serial.println("S1=" + String(angle1) + " | S2=" + String(angle2) + " | S3=" + String(angle3));
 }
 
 void servoDown(int id) {
-    if (id == 1) updateArm(angle1 - stepAngle, 1);
-    if (id == 2) updateArm(angle2 - stepAngle, 2);
-    if (id == 3) updateArm(angle3 - stepAngle, 3);
-    Serial.println(String(angle1) + " - " + String(angle2) + " - " + String(angle3));
+    switch (id) {
+        case 1: updateArm(1, angle1 - stepAngle); break;
+        case 2: updateArm(2, angle2 - stepAngle); break;
+        case 3: updateArm(3, angle3 - stepAngle); break;
+    }
+    Serial.println("S1=" + String(angle1) + " | S2=" + String(angle2) + " | S3=" + String(angle3));
 }
 
 void handleCommandServo(char cmd) {
@@ -104,9 +109,8 @@ void handleCommandServo(char cmd) {
 }
 
 void initServo() {
-    servo1.attach(34);
-    servo2.attach(35);
-    servo3.attach(36);
-
+    servo1.attach(14);
+    servo2.attach(13);
+    servo3.attach(15);
     setDefaultArm();
 }

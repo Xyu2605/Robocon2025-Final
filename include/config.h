@@ -5,7 +5,7 @@
 // WiFi and MQTT config
 const char* ssid = "thuchanhAT T5";
 const char* password = "12345679";
-const char* mqttServer = "172.19.43.72";
+const char* mqttServer = "172.19.44.106";
 const int mqttPort = 1883;
 
 extern WiFiClient espClient;
