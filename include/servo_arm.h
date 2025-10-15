@@ -1,18 +1,18 @@
-#include<ESP32Servo.h>
+#include <ESP32Servo.h>
 #pragma once
 
 extern int angle1;
 extern int angle2;
 extern int angle3;
 extern int stepAngle;
-    
+
 extern Servo servo1;
 extern Servo servo2;
 extern Servo servo3;
 
 void initServo();
 void setDefaultArm();
-void updateArm(int angle, int id);
+void updateArm(int id, int target);
 void servoUp(int id);
 void servoDown(int id);
 void handleCommandServo(char cmd);

@@ -109,8 +109,8 @@ void handleCommandServo(char cmd) {
 }
 
 void initServo() {
-    servo1.attach(14);
-    servo2.attach(13);
-    servo3.attach(15);
+    servo1.attach(14, 500, 2500);
+    servo2.attach(13, 500, 2500);
+    servo3.attach(12, 500, 2500);
     setDefaultArm();
 }
