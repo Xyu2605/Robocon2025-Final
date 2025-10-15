@@ -58,12 +58,12 @@ void setup(){
   client.setServer(mqttServer, mqttPort);
   client.setCallback(mqttCallback);
   //Initializating robot
-    initRobot();
-    Serial.println("Robot is ready");
+  initRobot();
+  Serial.println("Robot is ready");
 }
 
 void loop(){
-    if (WiFi.status() != WL_CONNECTED) {
+  if (WiFi.status() != WL_CONNECTED) {
     Serial.println("Lost connecting WiFi, try again...");
     WiFi.reconnect();
     delay(5000);
