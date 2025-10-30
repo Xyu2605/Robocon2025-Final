@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include "servo_arm.h"
 #include "config.h"
-#include "magnet.h"
 
 WiFiClient espClient;
 PubSubClient client(espClient);

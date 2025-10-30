@@ -5,28 +5,17 @@
 int angle1 = 0;
 int angle2 = 110;
 int angle3 = 145;
-int stepAngle = 5;
-int servoMoveSpeed = 20;
 int defaultAngles[3] = {0, 80, 120};
-int grabAngles[3]    = {0, 110, 125};
-int releaseAngles[3] = {90, 110, 145};
+int takeTheBallAngles[3]    = {0, 110, 125};
+int dropTheBallAngles[3] = {90, 110, 145};
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
-void updateArm(int angleUpdate, int id) {
-  if (angleUpdate < 0) angleUpdate = 0;
-  if (angleUpdate > 180) angleUpdate = 180;
+static const int servoChannels[3] = { SERVO_1, SERVO_2, SERVO_3 };
 
-  uint16_t pulse = map(angleUpdate, 0, 180, SERVO_MIN, SERVO_MAX);
+void updateArm(int id, int targetAngle) {
 
-  switch(id) {
-    case 1: angle1 = angleUpdate; pwm.setPWM(SERVO_1, 0, pulse); break;
-    case 2: angle2 = angleUpdate; pwm.setPWM(SERVO_2, 0, pulse); break;
-    case 3: angle3 = angleUpdate; pwm.setPWM(SERVO_3, 0, pulse); break;
-  }
-}
-
-void moveToTargetAngle(int id, int targetAngle) {
+  targetAngle = constrain(targetAngle, 0, 180);
   int *currentAngle = nullptr;
   int servoChannel = 0;
 
@@ -38,10 +27,16 @@ void moveToTargetAngle(int id, int targetAngle) {
   }
 
   int steps = abs(targetAngle - *currentAngle);
-  if (steps == 0) return;
+  int diff = targetAngle - *currentAngle;
+  if (diff == 0) return;
 
-  for (int step = 1; step <= steps; step++) {
-    int intermediateAngle = *currentAngle + (targetAngle - *currentAngle) * step / steps;
+  int stepSize = max(1, stepAngle);
+  int stepsNeeded = (abs(diff) + stepSize - 1) / stepSize; // ceil division
+
+  for (int step = 1; step <= stepsNeeded; step++) {
+    int travelled = step * stepSize;
+    if (travelled > abs(diff)) travelled = abs(diff);
+    int intermediateAngle = *currentAngle + (diff > 0 ? travelled : -travelled);
     uint16_t pulse = map(intermediateAngle, 0, 180, SERVO_MIN, SERVO_MAX);
     pwm.setPWM(servoChannel, 0, pulse);
     delay(servoMoveSpeed);
@@ -51,36 +46,44 @@ void moveToTargetAngle(int id, int targetAngle) {
 
 void autoUpdateArm(int targetAngles[], int numServos) {
   int currentAngles[3] = {angle1, angle2, angle3};
-  int steps = 0;
+  int maxSteps = 0;
 
+  // Determine how many steps are needed using the configured stepAngle
+  int stepSize = max(1, stepAngle);
   for (int i = 0; i < numServos; i++) {
     int diff = abs(targetAngles[i] - currentAngles[i]);
-    if (diff > steps) steps = diff;
+    int stepsForServo = (diff + stepSize - 1) / stepSize; // ceil
+    if (stepsForServo > maxSteps) maxSteps = stepsForServo;
   }
-  if (steps == 0) return;
+  if (maxSteps == 0) return;
 
-  for (int step = 1; step <= steps; step++) {
+  for (int step = 1; step <= maxSteps; step++) {
     for (int i = 0; i < numServos; i++) {
-      int intermediateAngle = currentAngles[i] + (targetAngles[i] - currentAngles[i]) * step / steps;
+      int diff = targetAngles[i] - currentAngles[i];
+      int travelled = step * stepSize;
+      if (travelled > abs(diff)) travelled = abs(diff);
+      int intermediateAngle = currentAngles[i] + (diff > 0 ? travelled : -travelled);
       uint16_t pulse = map(intermediateAngle, 0, 180, SERVO_MIN, SERVO_MAX);
-      pwm.setPWM(i, 0, pulse);
+      // use explicit servo channel mapping
+      pwm.setPWM(servoChannels[i], 0, pulse);
     }
     delay(servoMoveSpeed);
   }
 
+  // update globals
   angle1 = targetAngles[0];
   angle2 = targetAngles[1];
   angle3 = targetAngles[2];
 }
 
 void takeTheBall() { 
-  Serial.println("Grab ball"); 
-  autoUpdateArm(grabAngles, 3); 
+  Serial.println("Take the ball"); 
+  autoUpdateArm(takeTheBallAngles, 3); 
 }
 
-void throwTheBall() {
-  Serial.println("Release ball"); 
-  autoUpdateArm(releaseAngles, 3); 
+void dropTheBall() {
+  Serial.println("Drop the ball"); 
+  autoUpdateArm(dropTheBallAngles, 3); 
 }
 
 void setDefaultArm() { 
@@ -88,8 +91,8 @@ void setDefaultArm() {
   autoUpdateArm(defaultAngles, 3); 
 }
 
-void servoUp(int id) { moveToTargetAngle(id, (id==1?angle1:(id==2?angle2:angle3)) + stepAngle); }
-void servoDown(int id) { moveToTargetAngle(id, (id==1?angle1:(id==2?angle2:angle3)) - stepAngle); }
+void servoUp(int id) { updateArm(id, (id==1?angle1:(id==2?angle2:angle3)) + stepAngle); }
+void servoDown(int id) { updateArm(id, (id==1?angle1:(id==2?angle2:angle3)) - stepAngle); }
 
 void handleCommandServo(char cmd){
     switch(cmd){
@@ -100,7 +103,7 @@ void handleCommandServo(char cmd){
     case 'E': servoUp(3); break;
     case 'D': servoDown(3); break;
     case 'Z': takeTheBall(); break;
-    case 'N': throwTheBall(); break;
+    case 'N': dropTheBall(); break;
     default : break;
   }
 } 
