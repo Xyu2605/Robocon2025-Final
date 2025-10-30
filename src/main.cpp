@@ -1,6 +1,7 @@
 #include <Arduino.h>
-#include "robot.h"
 #include "config.h"
+#include "robot.h"
+#include "magnet.h"
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -15,6 +16,12 @@ void mqttCallback(char* topic, byte* message, unsigned int length) {
   if (String(topic) == "robot/cmd") {
     if (msg.length() > 0) {
       handleCommandMotor(msg[0]);
+    }
+  }
+
+  if (String(topic) == "magnet/cmd") {
+    if (msg.length() > 0) {
+      handleCommandMagnet(msg[0]);
     }
   }
 }
@@ -35,13 +42,10 @@ void reconnect() {
 }
 
 void setup(){
-
   Serial.begin(115200); 
-
   //WiFi setup
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-
   Serial.print("Connecting to WiFi: ");
   Serial.println(ssid);
 
@@ -68,7 +72,7 @@ void loop(){
     WiFi.reconnect();
     delay(5000);
   }
-
+  
   if(!client.connected()){
     reconnect();
   }
