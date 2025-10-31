@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "servo_arm.h"
 #include "config.h"
+#include "fire.h"
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -17,6 +18,11 @@ void mqttCallback(char* topic, byte* message, unsigned int length) {
       handleCommandServo(msg[0]);
     }
   }
+  if (String(topic) == "fire/cmd") {
+    if (msg.length() > 0){
+      handleCommandMotor(msg[0]);
+    }
+  }
 }
 
 void reconnect() {
@@ -25,6 +31,7 @@ void reconnect() {
     if (client.connect("ESP32Client")) {
       Serial.println("Connected!");
       client.subscribe("servo/cmd");
+      client.subscribe("fire/cmd");
     } else {
       Serial.print("Error: ");
       Serial.print(client.state());
@@ -54,9 +61,10 @@ void setup(){
   // MQTT setup
   client.setServer(mqttServer, mqttPort);
   client.setCallback(mqttCallback);
-  //Initializating robot
+  //Initializating
   initServo();
-  Serial.println("Servo is ready");
+  initFire();
+  Serial.println("Ready");
 }
 
 void loop(){
