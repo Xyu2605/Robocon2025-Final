@@ -3,6 +3,8 @@
 #include "config.h"
 #include "fire.h"
 
+#define TEST_ONLY 1
+
 WiFiClient espClient;
 PubSubClient client(espClient);
 
@@ -38,6 +40,7 @@ void reconnect() {
       Serial.println("Try to connect to MQTT after 5s.");
       delay(5000);
     }
+    
   }
 }
 
@@ -63,6 +66,7 @@ void setup(){
   client.setCallback(mqttCallback);
   //Initializating
   initServo();
+  delay(1000);
   initFire();
   Serial.println("Ready");
 }

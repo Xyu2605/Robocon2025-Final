@@ -4,28 +4,23 @@
 int motorSpeed = 200;
 int motorSpeedLevel = 25;
 
-void on(){
-
-    digitalWrite(R_EN, HIGH);
-    digitalWrite(L_EN, HIGH);
-    ledcWrite(pwmChannelR, motorSpeed);
-    ledcWrite(pwmChannelL, motorSpeed);
+void on() {
+    ledcWrite(PWM_CHANNEL, motorSpeed);
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, HIGH);
     Serial.printf("Motor ON, speed = %d\n", motorSpeed);
 }
 
-void off(){
-
-    digitalWrite(R_EN, LOW);
-    digitalWrite(L_EN, LOW);
-    ledcWrite(pwmChannelR, 0);
-    ledcWrite(pwmChannelL, 0);
+void off() {
+    ledcWrite(PWM_CHANNEL, 0); // Dừng PWM hoàn toàn
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, LOW);
     Serial.println("Motor OFF");
 }
 
 void changeMotorSpeedLevel(int delta) {
-    motorSpeed = constrain(motorSpeed + delta, 0, 255); 
-    ledcWrite(pwmChannelR, motorSpeed);
-    ledcWrite(pwmChannelL, motorSpeed);
+    motorSpeed = constrain(motorSpeed + delta, 0, 255);
+    ledcWrite(PWM_CHANNEL, motorSpeed); 
 
     if (delta > 0)
         Serial.printf("Tăng tốc độ: %d\n", motorSpeed);
@@ -33,8 +28,8 @@ void changeMotorSpeedLevel(int delta) {
         Serial.printf("Giảm tốc độ: %d\n", motorSpeed);
 }
 
-void handleCommandMotor(char cmd){
-    switch(cmd){
+void handleCommandMotor(char cmd) {
+    switch (cmd) {
         case 'U': on(); break;
         case 'Y': off(); break;
         case '1': changeMotorSpeedLevel(motorSpeedLevel); break;
@@ -42,17 +37,10 @@ void handleCommandMotor(char cmd){
     }
 }
 
-void initFire(){
-
-    pinMode(RPWM, OUTPUT);
-    pinMode(LPWM, OUTPUT);
-    pinMode(R_EN, OUTPUT);
-    pinMode(L_EN, OUTPUT);
-
-    ledcSetup(pwmChannelR, freq, resolution);
-    ledcSetup(pwmChannelL, freq, resolution);
-    ledcAttachPin(RPWM, pwmChannelR);
-    ledcAttachPin(LPWM, pwmChannelL);
-
+void initFire() {
+    pinMode(IN1, OUTPUT);
+    pinMode(IN2, OUTPUT);
+    ledcSetup(PWM_CHANNEL, freq, resolution);
+    ledcAttachPin(ENA, PWM_CHANNEL);
     off();
 }
