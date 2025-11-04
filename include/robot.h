@@ -2,20 +2,20 @@
 
 // trước trái
 #define ENA1 13
-#define IN1_1 12
-#define IN2_1 33                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+#define IN1_1 12 //8
+#define IN2_1 14                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 // trước phải
-#define ENB1 15
-#define IN3_1 2
-#define IN4_1 4
+#define ENB1 25
+#define IN3_1 26 
+#define IN4_1 27
 // sau trái
-#define ENA2  18 
-#define IN1_2  15
-#define IN2_2 26
+#define ENA2  21                                                      
+#define IN1_2  4
+#define IN2_2 15
 // sau phải       
-#define ENB2 32 
-#define IN3_2 19
-#define IN4_2 21 
+#define ENB2 19 
+#define IN3_2 18
+#define IN4_2 5 
 
 #define PWM_CHANNEL_0 0
 #define PWM_CHANNEL_1 1

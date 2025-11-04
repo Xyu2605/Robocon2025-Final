@@ -22,7 +22,7 @@ void motorSpin(int v1, int v2, int v3, int v4) {
   v2 = constrain(v2, -255, 255);
   v3 = constrain(v3, -255, 255);
   v4 = constrain(v4, -255, 255);
-
+  
   setMotor(IN1_1, IN2_1, PWM_CHANNEL_0, v1); // Motor 1 - Trước trái
   setMotor(IN3_1, IN4_1, PWM_CHANNEL_1, v2); // Motor 2 - Trước phải
   setMotor(IN1_2, IN2_2, PWM_CHANNEL_2, v3); // Motor 3 - Sau trái
@@ -46,7 +46,7 @@ void initRobot() {
   ledcSetup(PWM_CHANNEL_1, freq, resolution);
   ledcSetup(PWM_CHANNEL_2, freq, resolution);
   ledcSetup(PWM_CHANNEL_3, freq, resolution);
-  
+
   // Gán PWM cho các chân ENA/ENB
   ledcAttachPin(ENA1, PWM_CHANNEL_0);
   ledcAttachPin(ENB1, PWM_CHANNEL_1);
@@ -57,29 +57,22 @@ void initRobot() {
   motorSpin(0, 0, 0, 0);
 }
 
-void moveForward(int speed) {  motorSpin(speed, speed, speed, speed);  }
-void moveBackward(int speed) {  motorSpin(-speed, -speed, -speed, -speed);  }
-void turnRight(int speed) {  motorSpin(speed, -speed, speed, -speed);  }
-void turnLeft(int speed) {  motorSpin(-speed, speed, -speed, speed);  }
-void rotateRight(int speed) { motorSpin(speed, -speed, speed, -speed); }
-void rotateLeft(int speed) { motorSpin(-speed, speed, -speed, speed); }
+void moveForward(int speed) {  motorSpin(speed, speed, speed, speed);  Serial.println("Forward"); }
+void moveBackward(int speed) {  motorSpin(-speed, -speed, -speed, -speed);  Serial.println("Backward"); }
+void turnRight(int speed) {  motorSpin(speed, -speed, speed, -speed);  Serial.println("Turn Right"); }
+void turnLeft(int speed) {  motorSpin(-speed, speed, -speed, speed);  Serial.println("Turn Left"); }
+void rotateRight(int speed) { motorSpin(-speed, speed, -speed, speed); Serial.println("Rotate Right"); }
+void rotateLeft(int speed) { motorSpin(speed, -speed, speed, -speed); Serial.println("Rotate Left"); }
 
 void handleCommandMotor(char cmd){
     switch (cmd){
-        case 'F' :
-            moveForward(MOTOR_SPEED);  Serial.println(cmd);  break;
-        case 'B' :
-            moveBackward(MOTOR_SPEED);  Serial.println(cmd);  break;
-        case 'R':
-            turnRight(MOTOR_SPEED);   Serial.println(cmd);  break;
-        case 'L':
-            turnLeft(MOTOR_SPEED);  Serial.println(cmd);  break;
-        case 'G':
-            rotateRight(MOTOR_SPEED);  Serial.println(cmd);  break;
-        case 'H':
-            rotateLeft(MOTOR_SPEED);  Serial.println(cmd);  break;
-        case 'S':
-            motorSpin(0, 0, 0, 0);  Serial.println(cmd);  break;
+        case 'F' : moveForward(MOTOR_SPEED);  Serial.println(cmd);  break;
+        case 'B' : moveBackward(MOTOR_SPEED);  Serial.println(cmd);  break;
+        case 'R': turnRight(MOTOR_SPEED);   Serial.println(cmd);  break;
+        case 'L': turnLeft(MOTOR_SPEED);  Serial.println(cmd);  break;
+        case 'G': rotateRight(MOTOR_SPEED);  Serial.println(cmd);  break;
+        case 'H': rotateLeft(MOTOR_SPEED);  Serial.println(cmd);  break;
+        case 'S': motorSpin(0, 0, 0, 0);  Serial.println(cmd);  break;
         default :  break;
     }
 }

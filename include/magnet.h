@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAGNET_PIN 5 
+#define MAGNET_PIN 32   
 
 void initMagnet();
 void magnetOn();

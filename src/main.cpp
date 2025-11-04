@@ -7,6 +7,7 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 void mqttCallback(char* topic, byte* message, unsigned int length) {
+
   String msg;
   for (int i = 0; i < length; i++) {
     msg += (char)message[i];
@@ -42,7 +43,7 @@ void reconnect() {
   }
 }
 
-void setup(){
+void setup() {
   Serial.begin(115200); 
   //WiFi setup
   WiFi.mode(WIFI_STA);
@@ -60,11 +61,17 @@ void setup(){
   Serial.print("\nWiFi connected. IP: ");
   Serial.println(WiFi.localIP());
   // MQTT setup
+  Serial.println("[Setup] Setting MQTT server...");
   client.setServer(mqttServer, mqttPort);
   client.setCallback(mqttCallback);
+  Serial.println("[Setup] Initializing robot...");
   //Initializating robot
   initRobot();
-  Serial.println("Robot is ready");
+  Serial.println("[Setup] Robot initialized!");
+  Serial.println("[Setup] Initializing magnet...");
+  initMagnet();
+  Serial.println("[Setup] Magnet initialized!");
+  Serial.println("Ready");
 }
 
 void loop(){
