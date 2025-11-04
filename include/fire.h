@@ -1,10 +1,12 @@
 #pragma once
 
-#define PWM_CHANNEL_R 0
-#define PWM_CHANNEL_L 1
+#define RPWM 25
+#define LPWM 26
 #define R_EN 11
 #define L_EN 12
 
+#define PWM_CHANNEL_R 0
+#define PWM_CHANNEL_L 1
 constexpr  int freq = 20000;  
 constexpr  int resolution = 8;
 extern int motorSpeed;
