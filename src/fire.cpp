@@ -23,7 +23,7 @@ void off() {
 void changeMotorSpeedLevel(int delta) {
     motorSpeed = constrain(motorSpeed + delta, 0, 255);
     ledcWrite(PWM_CHANNEL_R, motorSpeed); 
-
+    
     if (delta > 0)
         Serial.printf("Tăng tốc độ: %d\n", motorSpeed);
     else
