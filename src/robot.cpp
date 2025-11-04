@@ -46,7 +46,7 @@ void initRobot() {
   ledcSetup(PWM_CHANNEL_1, freq, resolution);
   ledcSetup(PWM_CHANNEL_2, freq, resolution);
   ledcSetup(PWM_CHANNEL_3, freq, resolution);
-
+  
   // Gán PWM cho các chân ENA/ENB
   ledcAttachPin(ENA1, PWM_CHANNEL_0);
   ledcAttachPin(ENB1, PWM_CHANNEL_1);

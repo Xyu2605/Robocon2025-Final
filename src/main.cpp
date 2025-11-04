@@ -32,6 +32,7 @@ void reconnect() {
     if (client.connect("ESP32Client")) {
       Serial.println("Connected!");
       client.subscribe("robot/cmd");
+      client.subscribe("magnet/cmd");
     } else {
       Serial.print("Error: ");
       Serial.print(client.state());
