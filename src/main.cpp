@@ -65,7 +65,7 @@ void setup(){
   client.setServer(mqttServer, mqttPort);
   client.setCallback(mqttCallback);
   //Initializating
-  initServo();
+  // initServo();
   delay(1000);
   initFire();
   Serial.println("Ready");

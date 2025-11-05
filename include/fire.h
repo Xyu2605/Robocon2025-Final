@@ -1,9 +1,9 @@
 #pragma once
 
-#define RPWM 38
-#define LPWM 37
-#define R_EN 36
-#define L_EN 35
+#define RPWM 18
+#define LPWM 19
+#define R_EN 2
+#define L_EN 4
 
 #define PWM_CHANNEL_R 0
 #define PWM_CHANNEL_L 1
