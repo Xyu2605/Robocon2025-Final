@@ -57,17 +57,17 @@ void initRobot() {
   motorSpin(0, 0, 0, 0);
 }
 
-void moveForward(int speed) {  motorSpin(speed, speed, speed, speed);  Serial.println("Forward"); }
-void moveBackward(int speed) {  motorSpin(-speed, -speed, -speed, -speed);  Serial.println("Backward"); }
-void turnRight(int speed) {  motorSpin(speed, -speed, speed, -speed);  Serial.println("Turn Right"); }
-void turnLeft(int speed) {  motorSpin(-speed, speed, -speed, speed);  Serial.println("Turn Left"); }
-void rotateRight(int speed) { motorSpin(-speed, speed, -speed, speed); Serial.println("Rotate Right"); }
-void rotateLeft(int speed) { motorSpin(speed, -speed, speed, -speed); Serial.println("Rotate Left"); }
+void moveForward(int speed)   { motorSpin( speed,  speed,  speed,  speed); Serial.println("Forward"); }
+void moveBackward(int speed)  { motorSpin(-speed, -speed, -speed, -speed); Serial.println("Backward"); }
+void turnRight(int speed)     { motorSpin( speed, -speed, -speed,  speed); Serial.println("Right"); }
+void turnLeft(int speed)      { motorSpin(-speed,  speed,  speed, -speed); Serial.println("Left"); }
+void rotateRight(int speed)   { motorSpin( speed, -speed,  speed, -speed); Serial.println("Rotate Right"); }
+void rotateLeft(int speed)    { motorSpin(-speed,  speed, -speed,  speed); Serial.println("Rotate Left"); }
 
 void handleCommandMotor(char cmd){
     switch (cmd){
-        case 'F' : moveForward(MOTOR_SPEED);  Serial.println(cmd);  break;
-        case 'B' : moveBackward(MOTOR_SPEED);  Serial.println(cmd);  break;
+        case 'F': moveForward(MOTOR_SPEED);  Serial.println(cmd);  break;
+        case 'B': moveBackward(MOTOR_SPEED);  Serial.println(cmd);  break;
         case 'R': turnRight(MOTOR_SPEED);   Serial.println(cmd);  break;
         case 'L': turnLeft(MOTOR_SPEED);  Serial.println(cmd);  break;
         case 'G': rotateRight(MOTOR_SPEED);  Serial.println(cmd);  break;

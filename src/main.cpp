@@ -20,11 +20,11 @@ void mqttCallback(char* topic, byte* message, unsigned int length) {
     }
   }
 
-  if (String(topic) == "magnet/cmd") {
-    if (msg.length() > 0) {
-      handleCommandMagnet(msg[0]);
-    }
-  }
+  // if (String(topic) == "magnet/cmd") {
+  //   if (msg.length() > 0) {
+  //     handleCommandMagnet(msg[0]);
+  //   }
+  // }
 }
 
 void reconnect() {
@@ -33,7 +33,7 @@ void reconnect() {
     if (client.connect("ESP32Client")) {
       Serial.println("Connected!");
       client.subscribe("robot/cmd");
-      client.subscribe("magnet/cmd");
+      // client.subscribe("magnet/cmd");
     } else {
       Serial.print("Error: ");
       Serial.print(client.state());
@@ -67,6 +67,7 @@ void setup() {
   Serial.println("[Setup] Initializing robot...");
   //Initializating robot
   initRobot();
+  // initMagnet();
   Serial.println("[Setup] Robot initialized!");
   Serial.println("[Setup] Initializing magnet...");
   initMagnet();

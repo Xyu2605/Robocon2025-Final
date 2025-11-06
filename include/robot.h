@@ -9,7 +9,7 @@
 #define IN3_1 26 
 #define IN4_1 27
 // sau trái
-#define ENA2  21                                                      
+#define ENA2  2                                                  
 #define IN1_2  4
 #define IN2_2 15
 // sau phải       
@@ -24,7 +24,7 @@
 
 const int freq = 1000;     
 const int resolution = 8;  
-const int MOTOR_SPEED = 100; 
+const int MOTOR_SPEED = 200; 
 
 void initRobot();
 void motorSpin(int v1, int v2, int v3, int v4);
