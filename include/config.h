@@ -6,6 +6,7 @@
 const char* ssid = "minh";
 const char* password = "alo12345";
 const char* mqttServer = "192.168.70.225";
+const char* clientID = "espRobot";
 const int mqttPort = 1883;
 
 extern WiFiClient espClient;
