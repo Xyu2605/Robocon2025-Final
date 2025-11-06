@@ -6,6 +6,7 @@
 const char* ssid = "Phu cu to";
 const char* password = "12345679";
 const char* mqttServer = "192.168.137.173";
+const char* clinetID = "espServo";
 const int mqttPort = 1883;
 
 extern WiFiClient espClient;

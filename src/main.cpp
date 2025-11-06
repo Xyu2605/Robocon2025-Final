@@ -30,7 +30,7 @@ void mqttCallback(char* topic, byte* message, unsigned int length) {
 void reconnect() {
   while (!client.connected()) {
     Serial.print("Connecting to MQTT Server ...");
-    if (client.connect("ESP32Client")) {
+    if (client.connect(clinetID)) {
       Serial.println("Connected!");
       client.subscribe("servo/cmd");
       client.subscribe("fire/cmd");
@@ -65,7 +65,7 @@ void setup(){
   client.setServer(mqttServer, mqttPort);
   client.setCallback(mqttCallback);
   //Initializating
-  // initServo();
+  initServo();
   delay(1000);
   initFire();
   Serial.println("Ready");
