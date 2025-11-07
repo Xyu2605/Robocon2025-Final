@@ -3,8 +3,6 @@
 #include "config.h"
 #include "fire.h"
 
-#define TEST_ONLY 1
-
 WiFiClient espClient;
 PubSubClient client(espClient);
 

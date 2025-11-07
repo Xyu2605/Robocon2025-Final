@@ -5,13 +5,14 @@
 int angle1 = 0;
 int angle2 = 110;
 int angle3 = 145;
-int defaultAngles[3] = {0, 80, 120};
+int angle4 = 0;
+int defaultAngles[4] = {0, 80, 120, 0};
 int takeTheBallAngles[3]    = {0, 110, 125};
 int dropTheBallAngles[3] = {90, 110, 145};
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
-static const int servoChannels[3] = { SERVO_1, SERVO_2, SERVO_3 };
+static const int servoChannels[4] = { SERVO_1, SERVO_2, SERVO_3, SERVO_4 };
 
 void updateArm(int id, int targetAngle) {
 
@@ -23,6 +24,7 @@ void updateArm(int id, int targetAngle) {
     case 1: currentAngle = &angle1; servoChannel = SERVO_1; break;
     case 2: currentAngle = &angle2; servoChannel = SERVO_2; break;
     case 3: currentAngle = &angle3; servoChannel = SERVO_3; break;
+    case 4: currentAngle = &angle4; servoChannel = SERVO_4; break;
     default: return;
   }
 
@@ -31,7 +33,7 @@ void updateArm(int id, int targetAngle) {
   if (diff == 0) return;
 
   int stepSize = max(1, stepAngle);
-  int stepsNeeded = (abs(diff) + stepSize - 1) / stepSize; // ceil division
+  int stepsNeeded = (abs(diff) + stepSize - 1) / stepSize; 
 
   for (int step = 1; step <= stepsNeeded; step++) {
     int travelled = step * stepSize;
@@ -48,11 +50,10 @@ void autoUpdateArm(int targetAngles[], int numServos) {
   int currentAngles[3] = {angle1, angle2, angle3};
   int maxSteps = 0;
 
-  // Determine how many steps are needed using the configured stepAngle
   int stepSize = max(1, stepAngle);
   for (int i = 0; i < numServos; i++) {
     int diff = abs(targetAngles[i] - currentAngles[i]);
-    int stepsForServo = (diff + stepSize - 1) / stepSize; // ceil
+    int stepsForServo = (diff + stepSize - 1) / stepSize; 
     if (stepsForServo > maxSteps) maxSteps = stepsForServo;
   }
   if (maxSteps == 0) return;
@@ -64,13 +65,12 @@ void autoUpdateArm(int targetAngles[], int numServos) {
       if (travelled > abs(diff)) travelled = abs(diff);
       int intermediateAngle = currentAngles[i] + (diff > 0 ? travelled : -travelled);
       uint16_t pulse = map(intermediateAngle, 0, 180, SERVO_MIN, SERVO_MAX);
-      // use explicit servo channel mapping
+
       pwm.setPWM(servoChannels[i], 0, pulse);
     }
     delay(servoMoveSpeed);
   }
 
-  // update globals
   angle1 = targetAngles[0];
   angle2 = targetAngles[1];
   angle3 = targetAngles[2];
@@ -104,6 +104,8 @@ void handleCommandServo(char cmd){
     case 'D': servoDown(3); break;
     case 'Z': takeTheBall(); break;
     case 'N': dropTheBall(); break;
+    case '+': updateArm(4, angle4 + 90); break;
+    case '-': updateArm(4, angle4 - 90); break;
     default : break;
   }
 } 
