@@ -38,6 +38,7 @@ void handleCommandMotor(char cmd) {
 }
 
 void initFire() {
+    
     pinMode(R_EN, OUTPUT);
     pinMode(L_EN, OUTPUT);
     digitalWrite(R_EN, HIGH);

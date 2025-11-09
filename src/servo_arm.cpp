@@ -6,7 +6,8 @@ int angle1 = 0;
 int angle2 = 110;
 int angle3 = 145;
 int angle4 = 0;
-int defaultAngles[4] = {0, 80, 120, 0};
+int angle5 = 0;
+int defaultAngles[4] = {90, 80, 90, 0};
 int takeTheBallAngles[3]    = {0, 110, 125};
 int dropTheBallAngles[3] = {90, 110, 145};
 
@@ -25,6 +26,7 @@ void updateArm(int id, int targetAngle) {
     case 2: currentAngle = &angle2; servoChannel = SERVO_2; break;
     case 3: currentAngle = &angle3; servoChannel = SERVO_3; break;
     case 4: currentAngle = &angle4; servoChannel = SERVO_4; break;
+    case 5: currentAngle = &angle5; servoChannel = SERVO_5; break;
     default: return;
   }
 
@@ -44,6 +46,7 @@ void updateArm(int id, int targetAngle) {
     delay(servoMoveSpeed);
   }
   *currentAngle = targetAngle;
+  Serial.printf("Servo 1: %d Servo 2: %d Servo 3: %d Servo 4: %d\n", angle1, angle2, angle3, angle4);
 }
 
 void autoUpdateArm(int targetAngles[], int numServos) {
@@ -83,7 +86,9 @@ void takeTheBall() {
 
 void dropTheBall() {
   Serial.println("Drop the ball"); 
-  autoUpdateArm(dropTheBallAngles, 3); 
+  updateArm(2, 90);
+  updateArm(3, 35);
+  updateArm(1, 160);
 }
 
 void setDefaultArm() { 
@@ -102,10 +107,12 @@ void handleCommandServo(char cmd){
     case 'X': servoDown(2); break;
     case 'E': servoUp(3); break;
     case 'D': servoDown(3); break;
+    case 'O': servoUp(4); break;
+    case 'P': servoDown(4); break;
     case 'Z': takeTheBall(); break;
     case 'N': dropTheBall(); break;
-    case '+': updateArm(4, angle4 + 90); break;
-    case '-': updateArm(4, angle4 - 90); break;
+    case '+': updateArm(5, angle4 + 90) ; break;
+    case '-': updateArm(5, angle4 - 90); break;
     default : break;
   }
 } 
