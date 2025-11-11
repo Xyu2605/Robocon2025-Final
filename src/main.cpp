@@ -35,8 +35,8 @@ void reconnect() {
     } else {
       Serial.print("Error: ");
       Serial.print(client.state());
-      Serial.println("Try to connect to MQTT after 5s.");
-      delay(5000);
+      Serial.println("Try to connect to MQTT after 2s.");
+      delay(2000);
     }
     
   }
@@ -73,7 +73,7 @@ void loop(){
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("Lost connecting WiFi, try again...");
     WiFi.reconnect();
-    delay(5000);
+    delay(2000);
   }
   
   if(!client.connected()){

@@ -11,6 +11,8 @@
 #define SERVO_2 1
 #define SERVO_3 2
 #define SERVO_4 3
+#define SERVO_5 8
+#define SERVO_6 4
 
 const int stepAngle = 5;
 const int servoMoveSpeed = 20;
@@ -18,6 +20,8 @@ extern int angle1;
 extern int angle2;
 extern int angle3;
 extern int angle4;
+extern int angle5;
+extern int angle6;
 extern int defaultAngles[];
 extern int takeTheBallAngles[];
 extern int dropTheBallAngles[];
