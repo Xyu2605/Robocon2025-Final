@@ -8,9 +8,7 @@ int angle3 = 145;
 int angle4 = 0;
 int angle5 = 0;
 int angle6 = 0;
-int defaultAngles[4] = {90, 80, 90, 20};
-int takeTheBallAngles[4] = {0, 110, 125, 90};
-int dropTheBallAngles[4] = {160, 90, 35, 90};
+int defaultAngles[4] = {90, 80, 90, 0};
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
@@ -18,7 +16,15 @@ static const int servoChannels[6] = { SERVO_1, SERVO_2, SERVO_3, SERVO_4, SERVO_
 
 void updateArm(int id, int targetAngle) {
 
-  targetAngle = constrain(targetAngle, 0, 180);
+  targetAngle = constrain(targetAngle, 0, 160);
+
+  // switch(id) {
+  //   case 1: targetAngle = constrain(targetAngle, 10, 160); break;
+  //   case 2: targetAngle = constrain(targetAngle, 0, 120); break;
+  //   case 3: targetAngle = constrain(targetAngle, 0, 145); break;
+  //   case 4: targetAngle = constrain(targetAngle, 0, 90);  break;
+  // }
+
   int *currentAngle = nullptr;
   int servoChannel = 0;
 
@@ -53,7 +59,8 @@ void updateArm(int id, int targetAngle) {
 }
 
 void autoUpdateArm(int targetAngles[], int numServos) {
-  int currentAngles[4] = {angle1, angle2, angle3, angle4};
+  
+  int currentAngles[4] = {angle1, angle2, angle3, angle6};
   int maxSteps = 0;
 
   int stepSize = max(1, stepAngle);
@@ -80,25 +87,48 @@ void autoUpdateArm(int targetAngles[], int numServos) {
   angle1 = targetAngles[0];
   angle2 = targetAngles[1];
   angle3 = targetAngles[2];
-  angle4 = targetAngles[3];
+  angle6 = targetAngles[3];
 }
 
 void takeTheBall() { 
-  Serial.println("Take the ball"); 
-  autoUpdateArm(takeTheBallAngles, 3); 
+
+  Serial.println("Take the Ball");
+  int target1[4] = {160, angle2, angle3, angle4}; // servo1 
+  autoUpdateArm(target1, 4);
+  delay(500);
+
+  int target3[4] = {angle1, angle2, 35, angle4}; // servo3 
+  autoUpdateArm(target3, 4);
+  delay(500);
+  
+  int target2[4] = {angle1, 90, angle3, angle4}; // servo2 
+  autoUpdateArm(target2, 4);
+  delay(500);
+
+
 }
 
 void dropTheBall() {
+
   Serial.println("Drop the ball");
-  updateArm(2,90);
+  
+  int target2[4] = {angle1, 90, angle3, angle4}; // servo2 
+  autoUpdateArm(target2, 4);
   delay(200);
-  updateArm(3, 35);
+
+  int target3[4] = {angle1, angle2, 35, angle4}; // servo3 
+  autoUpdateArm(target3, 4);
   delay(200);
-  updateArm(1, 160);
+
+  int target1[4] = {80, angle2, angle3, angle4}; // servo1 
+  autoUpdateArm(target1, 4);
   delay(200);
-  updateArm(4,90);
-  delay(200);
+  
+  // int finalPos[4] = {160, 90, 35, 90}; 
+  // autoUpdateArm(finalPos, 4);
+
 }
+
 
 void setDefaultArm() { 
   Serial.println("Set default arm"); 
@@ -147,6 +177,7 @@ void handleCommandServo(char cmd){
     case 'P': servoDown(4); break;
     case 'Z': takeTheBall(); break;
     case 'N': dropTheBall(); break;
+    case 'R': setDefaultArm(); break;
     case '+': updateArm(5, angle5 + 90); break;
     case '-': updateArm(5, angle5 - 90); break;
     case '8': updateArm(6, angle6 + 65); break;
