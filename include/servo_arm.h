@@ -8,11 +8,11 @@
 #define SERVO_MAX 600
 #define SERVO_FREQ 50
 #define SERVO_1 0
-#define SERVO_2 1
-#define SERVO_3 2
-#define SERVO_4 3
-#define SERVO_5 8
-#define SERVO_6 4
+#define SERVO_2 3
+#define SERVO_3 6
+#define SERVO_4 9
+#define SERVO_5 12
+#define SERVO_6 15
 
 const int stepAngle = 5;
 const int servoMoveSpeed = 20;

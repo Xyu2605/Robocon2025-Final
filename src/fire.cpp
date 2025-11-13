@@ -72,9 +72,8 @@ void initFire() {
     pinMode(IN2, OUTPUT);
     digitalWrite(IN1, HIGH);
     digitalWrite(IN2, LOW);
-    ledcSetup(PWM_CHANNEL_1, freq, resolution);
+    ledcSetup(PWM_CHANNEL_1, freq2, resolution);
     ledcAttachPin(ENA1, PWM_CHANNEL_1);
-
 
     off();  
     motor2Off();

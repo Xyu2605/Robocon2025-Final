@@ -8,7 +8,7 @@ int angle3 = 145;
 int angle4 = 0;
 int angle5 = 0;
 int angle6 = 0;
-int defaultAngles[4] = {90, 80, 90, 0};
+int defaultAngles[4] = {90, 80, 90, 20};
 int takeTheBallAngles[4] = {0, 110, 125, 90};
 int dropTheBallAngles[4] = {160, 90, 35, 90};
 
@@ -147,8 +147,8 @@ void handleCommandServo(char cmd){
     case 'P': servoDown(4); break;
     case 'Z': takeTheBall(); break;
     case 'N': dropTheBall(); break;
-    case '-': updateArm(5, angle4 + 90); break;
-    case '+': updateArm(5, angle4 - 90); break;
+    case '+': updateArm(5, angle5 + 90); break;
+    case '-': updateArm(5, angle5 - 90); break;
     case '8': updateArm(6, angle6 + 65); break;
     case '9': updateArm(6, angle6 - 65); break;
     default : break;
